@@ -939,8 +939,8 @@
 				var orderCode ;
                     $.ajax({
 						//后期修改
-                        //url:"http://www.xiaozai.tech:2048/emall/orders/one/"+getOrderNum,
-                        url:"http://www.xiaozai.tech:2048/emall/orders/one/415782028920238080",
+                        url:"http://www.xiaozai.tech:2048/emall/orders/one/"+getOrderNum,
+                        //url:"http://www.xiaozai.tech:2048/emall/orders/one/415782028920238080",
                         type:"get",
                         contentType: 'application/json',
                         dataType:"json",
@@ -951,8 +951,8 @@
                             console.log(data.data);
                             orderCode = data.data.code;
                             //订单号先写死的 ，后期需要修改
-                         //   if ((data.data.customerId ==id)&& (data.data.id ==getOrderNum)) {
-                            if ((data.data.customerId ==1)&& (data.data.id ==415782028920238080)) {
+                            if ((data.data.customerId ==id)&& (data.data.id ==getOrderNum)) {
+                           // if ((data.data.customerId ==1)&& (data.data.id ==415782028920238080)) {
                                 $(".orderFee").html(data.data.orderMoney);
 
                             }else{
