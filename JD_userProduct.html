@@ -3328,6 +3328,7 @@
             };manyValues();
 
             var uid=localStorage.getItem("id");
+            var token=localStorage.getItem("token");
             var vl = new Vue({
                 el: '#aa',
                 data: {
@@ -3335,6 +3336,13 @@
                     buy_num: 1,
                     info: [],
                     cartcart:[],
+                    pro:{
+
+                    },
+                    url:"",
+                    names:"",
+                    count:0,
+                    url:"",
                 },
                 mounted: function () {
 
@@ -3358,10 +3366,43 @@
                         var target = $("#key").val();
                         window.location.href='JD_userlist.html?i='+target+'&uid='+uid;
                     },
+                    addPro:(function () {
+                            $.ajax({
+                                type:"get",
+                                url:"http://www.xiaozai.tech:2048/emall/cart/"+uid,
+                                beforeSend:function (request) {
+                                    request.setRequestHeader("Authorization",token);
+                                },
+                                success:function (result) {
+                                    var ci=result.data.id;
+                                    result.data.items.forEach(function (item) {
+                                        if(item.skuId === vl.lists.id){
+                                            vl.count += item.skuCount;
+                                        }
+                                    })
+                                    vl.count += vl.buy_num;
+                                    let insertPro = {"cartId":ci,
+                                                     "count":vl.count,
+                                                     "skuId":vl.lists.id
+                                                    };
+                                    $.ajax({
+                                        type:"PATCH",
+                                        url:"http://www.xiaozai.tech:2048/emall/cart",
+                                        data:JSON.stringify(insertPro),
+                                        contentType:"application/json",
+                                        beforeSend:function (request) {
+                                            request.setRequestHeader("Authorization",token);
+                                        },
+                                        success:function (result) {
+                                            console.log(result);
+                                        }
+                                    });
+                                }
+                            });
+                            this.url = 'JD_addCart.html?i='+vl.buy_num+'&skuid='+vl.lists.id;
+                    }),
                 }
             });
-
-            var token=localStorage.getItem("token");
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/customer/"+uid,
                 // url: "http://www.xiaozai.tech:2048/emall/customer/198",
@@ -3371,13 +3412,12 @@
                     request.setRequestHeader("Authorization", token)
                 },
                 success: function (dt) {
-                    console.log(dt);
+                    // console.log(dt);
                     vl.info = dt.data;
                 }
             });
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
-                // url: "http://www.xiaozai.tech:2048/emall/cart/198",
                 type: "get",
                 dataType: "json",
                 beforeSend: function (request) {
@@ -3388,6 +3428,17 @@
                     vl.cartcart = data.data;
                 }
             });
+            //
+            // $.ajax({
+            //     type:"get",
+            //     url:"http://www.xiaozai.tech:2048/emall/cart/"+userId,
+            //     beforeSend:function (request) {
+            //         request.setRequestHeader("Authorization",token);
+            //     },
+            //     success:function (result) {
+            //         cou.len = result.data.items.length;
+            //     }
+            // });
 
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/skudetails/" + ret,
@@ -3399,7 +3450,7 @@
                 success: function (data) {
                     // console.log(data.data.skus[0]);
                     vl.lists = data.data.skus[0];
-                    console.log(vl.lists.id);
+                    // console.log(vl.lists.id);
                 }
             });
 
@@ -6639,7 +6690,6 @@
             <span class="clr"></span>
         </div>
     </div>
-
     <!--导航栏 所有商品分类 结束-->
 
     <!--灰色条 导航-->
@@ -7826,7 +7876,7 @@
                            clstag="shangpin|keycount|product|选择号码和套餐_1">
                             选择号码和套餐
                         </a>
-                        <a id="InitCartUrl" v-on:click="to" clstag="shangpin|keycount|product|加入购物车_1">
+                        <a id="InitCartUrl" v-on:click="addPro" href="url" clstag="shangpin|keycount|product|加入购物车_1">
                         </a>
                         <a href="#none" id="btn-baitiao" class="btn-special2 btn-lg" style="display:none;">
                             打白条
