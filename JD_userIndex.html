@@ -1686,15 +1686,15 @@
     <script>
         $(function () {
             let target = "";
-            // var uid = 7;
-            接收uid
-            // let oneValues = function(){
-            //     var url=window.location.search; //获取url中"?"符后的字串
-            //     if(url.indexOf("?")!=-1){
-            //         uid = url.substr(url.indexOf("=")+1);
-            //     }
-            //     return uid;
-            // };oneValues();
+            var uid ;
+            // 接收uid
+            let oneValues = function(){
+                var url=window.location.search; //获取url中"?"符后的字串
+                if(url.indexOf("?")!=-1){
+                    uid = url.substr(url.indexOf("=")+1);
+                }
+                return uid;
+            };oneValues();
 
             var vin = new Vue({
                 el: '#all',
