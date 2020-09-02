@@ -3297,7 +3297,6 @@
     <script src="js/jquery.cookie.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/vue-router.js"></script>
-    <script src="js/token.js"></script>
     <script>
         $(function () {
             var ret;
@@ -3338,7 +3337,7 @@
                     },
                 }
             });
-
+            var token=localStorage.getItem("token");
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/skudetails/"+ret,
                 type: "get",

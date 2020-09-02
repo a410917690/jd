@@ -1683,12 +1683,11 @@
     <script src="js/jquery-3.1.0.js"></script>
     <script src="js/jquery.cookie.js"></script>
     <script src="js/vue.js"></script>
-    <script src="js/token.js"></script>
     <script>
         $(function () {
             let target = "";
             var uid = 7;
-            // //接收uid
+            //接收uid
             // let oneValues = function(){
             //     var url=window.location.search; //获取url中"?"符后的字串
             //     if(url.indexOf("?")!=-1){
@@ -1726,6 +1725,7 @@
                     },
                 }
             });
+            var token=localStorage.getItem("token");
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/customer/"+uid,
                 // url: "http://www.xiaozai.tech:2048/emall/customer/7",

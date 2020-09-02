@@ -1697,7 +1697,6 @@
     <script src="js/jquery-3.1.0.js"></script>
     <script src="js/jquery.cookie.js"></script>
     <script src="js/vue.js"></script>
-    <script src="js/token.js"></script>
     <!--    <script src="js/toPage.js"></script>-->
     <script>
         $(function () {
@@ -1775,6 +1774,7 @@
             };
             a();
 
+            var token=localStorage.getItem("token");
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
                 // url: "http://www.xiaozai.tech:2048/emall/cart/198",
