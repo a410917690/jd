@@ -1881,12 +1881,15 @@
                 $("div.m>div").eq(checkedLiIndex).show();
                 $("div.m>div").eq(checkedLiIndex).siblings().hide();
             });
-            // let top = new Vue({
-            //     el:"#top",
-            //     data:{
-            //         username:userName,
-            //     }
-            // });
+            let uName = localStorage.getItem("username");
+            let token = localStorage.getItem("token");
+            let id = localStorage.getItem("id");
+            new Vue({
+                el:".link-login",
+                data:{
+                    username:uName,
+                }
+            });
             let vue = new Vue({
                 el: "#goods",
                 data: {
@@ -1896,14 +1899,13 @@
                 methods:{
                     shopping: function (orderID) {
                         localStorage.setItem("orderId",orderID);
-                        // alert(orderID)
-                        location.assign("JD_pay.html")
+                        window.location='http://localhost:63342/jd/JD_payRS.html?out_trade_no='+orderID;
                     }
                 },
                 mounted() {
                     //获得所有的商品
                     $.ajax({
-                        url: "http://www.xiaozai.tech:2048/emall/orders/2",
+                        url: "http://www.xiaozai.tech:2048/emall/orders/"+id,
                         dataType: "json",
                         contentType: "application/json;charset=utf-8",
                         type: "get",
@@ -2435,13 +2437,13 @@
     <div class="w">
         <div class="logo">
             <a class="fore1" href="#"></a>
-            <a class="fore2" href="#">我的京东</a>
-            <a class="fore3" href="#">返回京东首页</a>
+            <a class="fore2" href="http://localhost:63342/jd/JD_index.html">我的京东</a>
+            <a class="fore3" href="http://localhost:63342/jd/JD_userIndex.html">返回京东首页</a>
         </div>
         <div class="navitems">
             <ul>
                 <li class="fore-1">
-                    <a href="#" target="_self">首页</a>
+                    <a href="http://localhost:63342/jd/JD_userIndex.html" target="_self">首页</a>
                 </li>
                 <li class="fore-3">
                     <div class="dl">
