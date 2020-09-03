@@ -2262,7 +2262,7 @@
 
                     <!--单品开始-->
                     <div class="goods-items" id="jdcart">
-                        <div class="goods-item goods-item-extra"  v-for="ca in cart">
+                        <div class="goods-item goods-item-extra" v-for="ca in cart">
                             <div class="p-img">
                                 <a target="_blank"><img v-bind:src="'http://123.57.7.108:81/'+ca.skuImage"
                                                         style="width:80px;height:80px;"></a>
@@ -2321,9 +2321,9 @@
             </div>
         </div>
         <div class="hr" style="margin-top: 38px;"></div>
-<!--        <div class="step-tit step-toggle-on">-->
-<!--            <h3>使用优惠/抵用<i></i></h3>-->
-<!--        </div>-->
+        <!--        <div class="step-tit step-toggle-on">-->
+        <!--            <h3>使用优惠/抵用<i></i></h3>-->
+        <!--        </div>-->
     </div>
 </div>
 </div>
@@ -2346,9 +2346,9 @@
 
 <!--提交订单-->
 <div class="tijiaodingdan jdcart">
-    <div class="fc-price-info" v-for="ca in cart">
+    <div class="fc-price-info">
         <span class="price-tit">应付总额：</span>
-        <span class="price-num">￥{{ca.skuPrice *ca.skuCount}}</span>
+        <span class="price-num">￥{{calcAll}}</span>
     </div>
     <div class="fc-consignee-info" v-for="ca in cart">
         <span class="mr20" id="sendAddr">寄送至：
@@ -2540,7 +2540,20 @@
             data: {
                 cart: []
             },
+            computed: {
+                calcAll: (function () {
+                    let sum = 0;
+                    let len = this.pros.length;
+                    this.pros.forEach(function (pro) {
+                        if (pro.selected) {
+                            sum += pro.skuPrice * pro.skuCount;
+                        }
+                    })
+                    return sum;
+                }),
+            },
         })
+
         $.ajax({
             url: "http://www.xiaozai.tech:2048/emall/customer/addrs/3",
             type: "get",
