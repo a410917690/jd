@@ -1686,22 +1686,22 @@
     <script>
         $(function () {
             let target = "";
-            var uid ;
+            var uid =localStorage.getItem("id");
             // 接收uid
-            let oneValues = function(){
-                var url=window.location.search; //获取url中"?"符后的字串
-                if(url.indexOf("?")!=-1){
-                    uid = url.substr(url.indexOf("=")+1);
-                }
-                return uid;
-            };oneValues();
+            // let oneValues = function(){
+            //     var url=window.location.search; //获取url中"?"符后的字串
+            //     if(url.indexOf("?")!=-1){
+            //         uid = url.substr(url.indexOf("=")+1);
+            //     }
+            //     return uid;
+            // };oneValues();
 
             var vin = new Vue({
                 el: '#all',
                 data: {
                     categories: [],
                     info:[],
-                    cartcart:[],
+                    carts:[],
                 },
                 mounted: function () {
                     $.get("http://www.xiaozai.tech:2048/emall/categories", function (data) {
@@ -1740,19 +1740,19 @@
                 }
             });
 
-            // $.ajax({
-            //     url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
-            //     // url: "http://www.xiaozai.tech:2048/emall/cart/198",
-            //     type: "get",
-            //     dataType: "json",
-            //     beforeSend: function (request) {
-            //         request.setRequestHeader("Authorization", token)
-            //     },
-            //     success: function (data) {
-            //         console.log(data);
-            //         vin.cartcart = data.data;
-            //     }
-            // });
+            $.ajax({
+                url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
+                // url: "http://www.xiaozai.tech:2048/emall/cart/198",
+                type: "get",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", token)
+                },
+                success: function (data) {
+                    vin.carts = data.data;
+                    console.log(vin.carts);
+                }
+            });
 
 
             let a = function () {
@@ -2292,7 +2292,7 @@
             <div class="cw-icon">
                 <i class="ci-left"></i>
                 <i class="ci-right">&gt;</i>
-                <i class="ci-count" id="shopping-amount">0</i>
+                <i class="ci-count" id="shopping-amount">{{carts.items.length}}</i>
                 <a target="_blank" href="JD_cart.html">我的购物车</a>
             </div>
             <div class="dorpdown-layer">

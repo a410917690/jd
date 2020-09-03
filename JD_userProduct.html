@@ -3399,7 +3399,7 @@
                                     });
                                 }
                             });
-                            this.url = 'JD_addCart.html?i='+vl.buy_num+'&skuid='+vl.lists.id;
+                        window.location.href='JD_cart.html'+ '?i='+vl.buy_num+'&skuid='+vl.lists.id;
                     }),
                 }
             });
@@ -7876,7 +7876,7 @@
                            clstag="shangpin|keycount|product|选择号码和套餐_1">
                             选择号码和套餐
                         </a>
-                        <a id="InitCartUrl" v-on:click="addPro" href="url" clstag="shangpin|keycount|product|加入购物车_1">
+                        <a id="InitCartUrl" v-on:click="addPro" clstag="shangpin|keycount|product|加入购物车_1">
                         </a>
                         <a href="#none" id="btn-baitiao" class="btn-special2 btn-lg" style="display:none;">
                             打白条
