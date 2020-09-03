@@ -1767,7 +1767,7 @@
                 }
             });
             let a = function () {
-                $.get("http://www.xiaozai.tech:2048/emall/sku-page?pageNum=1&pageSize=16&query=" + ret, function (data) {
+                $.get("http://www.xiaozai.tech:2048/emall/sku-page?pageNum=1&pageSize=4&query=" + ret, function (data) {
                     vl.lists = data.data.list;
                     console.log(vl.lists[0].name);
                     console.log(vl.lists);
@@ -1779,7 +1779,6 @@
             var token = localStorage.getItem("token");
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/cart/" + uid,
-                // url: "http://www.xiaozai.tech:2048/emall/cart/198",
                 type: "get",
                 dataType: "json",
                 beforeSend: function (request) {
@@ -1810,7 +1809,7 @@
                     return;
                 };//翻页容器dom对象,必要参数
                 var total_item = (data_obj.total_item !== undefined) ? parseInt(data_obj.total_item) : 0;//数据条目总数,默认为0,组件将不加载
-                var per_num = (data_obj.per_num !== undefined) ? parseInt(data_obj.per_num) : 16;//每页显示条数,默认为4条
+                var per_num = (data_obj.per_num !== undefined) ? parseInt(data_obj.per_num) : 4;//每页显示条数,默认为4条
                 var current_page = (data_obj.current_page !== undefined) ? parseInt(data_obj.current_page) : 1;//当前页,默认为1
                 var total_page = Math.ceil(total_item / per_num);//计算总页数,不足2页,不加载组件
                 if (total_page < 2) {
@@ -1909,19 +1908,19 @@
 
                 //此处,请为页面翻页展示内容定义方法
                 change_content: function change_content(per_num, current_page) {
-                    // per_num = per_num ? per_num : 1;
-                    // current_page = current_page ? current_page : 1;
+                    per_num = per_num ? per_num : 1;
+                    current_page = current_page ? current_page : 1;
                     // var arr = new Array();
                     // $.get("http://www.xiaozai.tech:2048/emall/sku-page?pageNum=1&pageSize=16", function (data) {
                     //     // console.log(vl.lists[0].name);
                     //     arr = data.data.list;
                     // })
-                    // var page_content = "<ul>";
+                    var page_content = "<ul>";
                     // for (var i = 0; i < 272; i++) {
                     //     page_content += '<li>arr[i].name</li>';
                     // }
-                    // page_content += "</ul>";
-                    // $(this.obj_box).children('.page_content').html(page_content);
+                    page_content += "</ul>";
+                    $(this.obj_box).children('.page_content').html(page_content);
                 }
             };
             page_ctrl(obj_2);
@@ -2813,13 +2812,13 @@
                                     <div class="fs-cell delivery-location"></div>
                                 </div>
                             </div>
-                            <div id="plist" class="good-list-v1"  >
+                            <div id="plist" class="good-list-v1" style="display:flex;margin-top: 40px" >
                                 <ul class="gl-wrap" v-for="(list,index) in lists" >
                                     <li class="gl-item">
                                         <div class="gl-i-wrap">
                                             <div class="p-img">
                                                 <!--                                                <a href="JD_product.html">-->
-                                                <img id="open" width="220px" height="220px" style="text-align: center"
+                                                <img id="open" width="220px" height="220px"
                                                      v-bind:src="'http://123.57.7.108:81/'+lists[index].image"
                                                      v-on:click="to(index)">
                                                 <!--                                                </a>-->
