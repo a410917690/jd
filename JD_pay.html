@@ -840,10 +840,24 @@
 					</div>
 					
 					<div id="zhifu">
-						<input type="button" id="sure" name="sure" value="立即支付" style="background-color: #b5b5b5;"/>
-						<span>
+                        <form action="http://39.103.155.55:8080/alipay/alipayUrl" type="get">
+                            <!--订单号:-->
+                            <input type="hidden" id="codeNum">
+                            <!--金额：-->
+                            <input type="hidden" id="parice">
+                            <!--商品名：-->
+                            <input type="hidden" id="shopName">
+                            <!--描述：-->
+                            <input type="hidden" id="shopDetils">
+                            <!--回调地址：-->
+                            <input type="hidden" id="returnAdress">
+                            <input type="submit" id="sure" name="sure" value="立即支付" style="background-color: #b5b5b5;"/>
+                            <span>
 							请选择支付宝付款
 						</span>
+                        </form>
+
+
 					</div>
 				</div>
 				<!--其他支付方式-->
@@ -874,6 +888,9 @@
 			<img src="img/images2/footer.png"20 width="185">
 		</div>
 		</div>
+        <div>
+
+        </div>
 		
 		<div id="tucao">
 			<a href="#"></a>
@@ -884,22 +901,18 @@
 		<script type="text/javascript">
 
 			$(function(){
+
 				//=======================================
                 var id = localStorage.getItem("id");
                 var token=localStorage.getItem("token");
                 $("#accountId").html(id);
                 $("#sure").css("background-color","red");
-
-
-
                 //点击支付
-                $("#sure").click(function () {
-                    //window.location.href = "http://localhost:63342/jd/JD_payRS.html"
-                  //给url设置参数
-                    window.location='http://localhost:63342/jd/JD_payRS.html?out_trade_no='+getOrderNum;
-                });
-
-
+                // $("#sure").click(function () {
+                //     //window.location.href = "http://localhost:63342/jd/JD_payRS.html"
+                //   //给url设置参数
+                //    window.location='http://localhost:63342/jd/JD_payRS.html?out_trade_no='+orderCode;
+                // });
                         //=====判断是否支付======？？？？？？？？
                         // //修改订单状态
                         // $.ajax({
@@ -919,9 +932,6 @@
                         //         window.location.href = "http://localhost:63342/jd/JD_payRS.html"
                         //     }
                         // })
-
-
-
 				//获取订单号，url中的参数
                 function getQueryVariable(variable)
                 {
@@ -935,12 +945,14 @@
                 }
                 var getOrderNum = getQueryVariable(" _orderNum");
                 $("#orderNum").html(getOrderNum);
+                var getorderFee ;
 					//获取订单信息
+                var getShopName="";
 				var orderCode ;
                     $.ajax({
 						//后期修改
                         url:"http://www.xiaozai.tech:2048/emall/orders/one/"+getOrderNum,
-                        //url:"http://www.xiaozai.tech:2048/emall/orders/one/415782028920238080",
+                        // url:"http://www.xiaozai.tech:2048/emall/orders/one/415782028920238080",
                         type:"get",
                         contentType: 'application/json',
                         dataType:"json",
@@ -948,18 +960,29 @@
                             request.setRequestHeader("Authorization",token);
                         },
                         success:function (data){
-                            console.log(data.data);
                             orderCode = data.data.code;
+                            $("#codeNum").val(orderCode);
                             //订单号先写死的 ，后期需要修改
                             if ((data.data.customerId ==id)&& (data.data.id ==getOrderNum)) {
                            // if ((data.data.customerId ==1)&& (data.data.id ==415782028920238080)) {
+                                getorderFee = data.data.orderMoney;
+                                for (let i = 0; i < data.data.items.length; i++) {
+                                    getShopName += data.data.items[i].name+"*"+ data.data.items[i].count+" ----";
+                                }
                                 $(".orderFee").html(data.data.orderMoney);
+                               $("#parice").val(getorderFee);
+                               $("#shopName").val(getShopName);
+                               $("#shopDetils").val("嘿嘿");
+                               $("#returnAdress").val("http://localhost:63342/jd/JD_payRs.html");
 
                             }else{
                                 alert("订单信息有误！请重试！")
                             }
                         }
                     })
+
+
+
 
 			});
 		</script>
