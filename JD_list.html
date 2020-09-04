@@ -1702,7 +1702,7 @@
     <script>
         $(function () {
             var ret;
-            //接收id值
+
             let oneValues = function () {
                 var url = window.location.search; //获取url中"?"符后的字串
                 if (url.indexOf("?") != -1) {
@@ -1843,7 +1843,6 @@
                     }
                 });
             }
-
             var obj_2 = {//定义分页参数和方法
                 obj_box: '.page_2',//翻页容器
                 total_item: 272,//条目总数
@@ -1859,10 +1858,8 @@
                         // console.log(vl.lists[0].name);
                         arr = data.data.list;
                     })
-                    var page_content = "<ul>";
-                    for (var i = 0; i < arr.length; i++) {
-                        page_content += '<li>arr[i].name</li>';
-                    }
+
+                    var page_content = "</ul>";
                     page_content += "</ul>";
                     $(this.obj_box).children('.page_content').html(page_content);
                 }

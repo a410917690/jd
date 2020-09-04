@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.5.1.js"></script>
+    <script>
+        $(function () {
+            var token=localStorage.getItem("token");
+
+            $.ajax({
+                url: "http://www.xiaozai.tech:2048/emall/cart/9",
+                type: "get",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", token)
+                },
+                success: function (data) {
+                    console.log(data);
+                    let insertPro = {"cartId":48,
+                        "count":4,
+                        "skuId":67,
+                    };
+                    $.ajax({
+                        type:"patch",
+                        url:"http://www.xiaozai.tech:2048/emall/cart",
+                        data:JSON.stringify(insertPro),
+                        contentType:"application/json",
+                        beforeSend:function (request) {
+                            request.setRequestHeader("Authorization",token);
+                        },
+                        success:function (result) {
+                            console.log(result);
+                        }
+                    });
+                }
+            });
+
+
+
+            // $.ajax({
+            //     url: "http://www.xiaozai.tech:2048/emall/customer/"+9,
+            //     type: "get",
+            //     dataType: "json",
+            //     beforeSend: function (request) {
+            //         request.setRequestHeader("Authorization", token)
+            //     },
+            //     success: function (dt) {
+            //         // console.log(dt);
+            //         // vl.info = dt.data;
+            //         // vl.cid = dt.data.id;
+            //         console.log(dt.data.id);
+            //     }
+            // });
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

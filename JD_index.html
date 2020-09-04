@@ -1707,8 +1707,9 @@
                         window.location.href = 'JD_list.html?i=' + target;
                     },
                     to: function (index) {
-                        idid = this.categories[index].id;
-                        window.location.href = 'JD_list.html?id='+idid;
+                        target = this.categories[index].id;
+                        window.location.href = 'JD_list.html?i='+target;
+                        // alert(vi.categories[index].name);
                     },
                 }
             });
@@ -2278,8 +2279,8 @@
                     </div>
                     <div class="dd">
                         <div class="dd-inner" id="categorys-dd-inner" v-for="(category,index) in categories">
-                            <div class="item fore1" data-index="n">
-                                <h3><a target="_blank" href="" v-on:click="to(index)">{{category.name}}</a></h3>
+                            <div class="item fore1" data-index="1">
+                                <h3><a target="_blank" href="" v-on:click="to(index)">{{categories[index].name}}</a></h3>
                                 <i>&gt;</i>
                             </div>
                         </div>

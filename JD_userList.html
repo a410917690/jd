@@ -1910,11 +1910,11 @@
                 change_content: function change_content(per_num, current_page) {
                     per_num = per_num ? per_num : 1;
                     current_page = current_page ? current_page : 1;
-                    // var arr = new Array();
-                    // $.get("http://www.xiaozai.tech:2048/emall/sku-page?pageNum=1&pageSize=16", function (data) {
-                    //     // console.log(vl.lists[0].name);
-                    //     arr = data.data.list;
-                    // })
+                    var arr = new Array();
+                    $.get("http://www.xiaozai.tech:2048/emall/sku-page?pageNum=1&pageSize=16", function (data) {
+                        // console.log(vl.lists[0].name);
+                        arr = data.data.list;
+                    })
                     var page_content = "<ul>";
                     // for (var i = 0; i < 272; i++) {
                     //     page_content += '<li>arr[i].name</li>';
