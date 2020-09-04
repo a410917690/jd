@@ -3293,12 +3293,13 @@
 
 
     </style>
-    <script src="js/jquery-3.5.1.js"></script>
+    <script src="js/jquery-3.1.0.js"></script>
     <script src="js/jquery.cookie.js"></script>
     <script src="js/vue.js"></script>
-    <script src="js/vue-router.js"></script>
     <script>
         $(function () {
+            var uid=localStorage.getItem("id");
+            var token=localStorage.getItem("token");
             var ret;
             var a;
             //接收多值
@@ -3319,17 +3320,30 @@
                     value[1] = strs[1].split("=")[1];
                     // ret = encodeURI(value[0]);
                     // ret = encodeURI(value[0]);
-                    console.log(value[0]);
-                    console.log(value[1]);
+                    // console.log(value[0]);
+                    // console.log(value[1]);
                     ret= value[0];
                     a = value[1];
                     return ret;
                 }
-            };manyValues();
+            };
+            manyValues();
 
-            var uid=localStorage.getItem("id");
-            var token=localStorage.getItem("token");
-            var vl = new Vue({
+            $.ajax({
+                url: "http://www.xiaozai.tech:2048/emall/skudetails/" + ret,
+                type: "get",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", token)
+                },
+                success: function (data) {
+                    // console.log(data.data.skus[0]);
+                    vl.lists = data.data.skus[0];
+                    // console.log(vl.lists.id);
+                }
+            });
+
+            let vl = new Vue({
                 el: '#aa',
                 data: {
                     lists: [],
@@ -3337,12 +3351,10 @@
                     info: [],
                     cartcart:[],
                     pro:{
-
                     },
-                    url:"",
                     names:"",
                     count:0,
-                    url:"",
+                    len:0,
                 },
                 mounted: function () {
 
@@ -3352,7 +3364,7 @@
                         this.buy_num++;
                     },
                     reduce: function () {
-                        if (this.buy_num == 0) {
+                        if (this.buy_num === 0) {
                             return;
                         } else {
                             this.buy_num--;
@@ -3374,19 +3386,19 @@
                                     request.setRequestHeader("Authorization",token);
                                 },
                                 success:function (result) {
-                                    var ci=result.data.id;
+                                    console.log(result.data.id);
                                     result.data.items.forEach(function (item) {
                                         if(item.skuId === vl.lists.id){
                                             vl.count += item.skuCount;
                                         }
-                                    })
+                                    });
                                     vl.count += vl.buy_num;
-                                    let insertPro = {"cartId":ci,
+                                    var insertPro = {"cartId":result.data.id,
                                                      "count":vl.count,
-                                                     "skuId":vl.lists.id
+                                                     "skuId":vl.lists.id,
                                                     };
                                     $.ajax({
-                                        type:"PATCH",
+                                        type:"patch",
                                         url:"http://www.xiaozai.tech:2048/emall/cart",
                                         data:JSON.stringify(insertPro),
                                         contentType:"application/json",
@@ -3399,13 +3411,13 @@
                                     });
                                 }
                             });
-                        window.location.href='JD_cart.html'+ '?i='+vl.buy_num+'&skuid='+vl.lists.id;
+                        window.location.href='JD_cart.html'+'?i='+vl.buy_num+'&skuid='+vl.lists.id;
                     }),
                 }
             });
+
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/customer/"+uid,
-                // url: "http://www.xiaozai.tech:2048/emall/customer/198",
                 type: "get",
                 dataType: "json",
                 beforeSend: function (request) {
@@ -3416,6 +3428,7 @@
                     vl.info = dt.data;
                 }
             });
+
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
                 type: "get",
@@ -3424,36 +3437,10 @@
                     request.setRequestHeader("Authorization", token)
                 },
                 success: function (data) {
-                    console.log(data);
-                    vl.cartcart = data.data;
+                    // console.log(data);
+                    vl.len = data.data.items.length;
                 }
             });
-            //
-            // $.ajax({
-            //     type:"get",
-            //     url:"http://www.xiaozai.tech:2048/emall/cart/"+userId,
-            //     beforeSend:function (request) {
-            //         request.setRequestHeader("Authorization",token);
-            //     },
-            //     success:function (result) {
-            //         cou.len = result.data.items.length;
-            //     }
-            // });
-
-            $.ajax({
-                url: "http://www.xiaozai.tech:2048/emall/skudetails/" + ret,
-                type: "get",
-                dataType: "json",
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", token)
-                },
-                success: function (data) {
-                    // console.log(data.data.skus[0]);
-                    vl.lists = data.data.skus[0];
-                    // console.log(vl.lists.id);
-                }
-            });
-
             // $('#s').html(oneValues());
         });
     </script>
@@ -3986,7 +3973,7 @@
         <div id="settleup" class="dorpdown">
             <div class="cw-icon">
                 <i class="ci-left"></i>
-                <i class="ci-right">&gt;</i><i class="ci-count" id="shopping-amount">{{cartcart.items.length}}</i>
+                <i class="ci-right">&gt;</i><i class="ci-count" id="shopping-amount">{{len}}</i>
                 <a target="_blank" href="JD_cart.html">我的购物车</a>
             </div>
             <div class="dorpdown-layer">
