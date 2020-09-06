@@ -3301,60 +3301,57 @@
             var uid=localStorage.getItem("id");
             var token=localStorage.getItem("token");
             var ret;
-            var a;
-            //接收多值
-            function manyValues(){
-                var url=window.location.search;
-                if(url.indexOf("?")!=-1){
-                    var str = url.substr(1);
-                    strs = str.split("&");
-                    var key=new Array(strs.length);
-                    var value=new Array(strs.length);
-                    // for(i=0;i<strs.length;i++){
-                    //     key[i]=strs[i].split("=")[0]
-                    //     value[i]=unescape(strs[i].split("=")[1]);
-                    //     console.log(key[i]+"="+value[i]);
-                    // }
-                    key[0]=strs[0].split("=")[0]
-                    value[0] = decodeURI(strs[0].split("=")[1]);
-                    value[1] = strs[1].split("=")[1];
-                    // ret = encodeURI(value[0]);
-                    // ret = encodeURI(value[0]);
-                    // console.log(value[0]);
-                    // console.log(value[1]);
-                    ret= value[0];
-                    a = value[1];
-                    return ret;
+            // 接收ret值
+            let oneValues = function () {
+                var url = window.location.search; //获取url中"?"符后的字串
+                if (url.indexOf("?") != -1) {
+                    ret = url.substr(url.indexOf("=") + 1);
                 }
+                return ret;
+                // alert(ret);
             };
-            manyValues();
+            oneValues();
 
-            $.ajax({
-                url: "http://www.xiaozai.tech:2048/emall/skudetails/" + ret,
-                type: "get",
-                dataType: "json",
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", token)
-                },
-                success: function (data) {
-                    // console.log(data.data.skus[0]);
-                    vl.lists = data.data.skus[0];
-                    // console.log(vl.lists.id);
-                }
-            });
+            //接收多值
+            // function manyValues(){
+            //     var url=window.location.search;
+            //     if(url.indexOf("?")!=-1){
+            //         var str = url.substr(1);
+            //         strs = str.split("&");
+            //         var key=new Array(strs.length);
+            //         var value=new Array(strs.length);
+            //         // for(i=0;i<strs.length;i++){
+            //         //     key[i]=strs[i].split("=")[0]
+            //         //     value[i]=unescape(strs[i].split("=")[1]);
+            //         //     console.log(key[i]+"="+value[i]);
+            //         // }
+            //         key[0]=strs[0].split("=")[0]
+            //         value[0] = decodeURI(strs[0].split("=")[1]);
+            //         value[1] = strs[1].split("=")[1];
+            // ret = encodeURI(value[0]);
+            // ret = encodeURI(value[0]);
+            // console.log(value[0]);
+            // console.log(value[1]);
+            //     ret= value[0];
+            //     a = value[1];
+            //     return ret;
+            // }
+            // };
+            // manyValues();
 
+            let a = 0;
             let vl = new Vue({
                 el: '#aa',
                 data: {
                     lists: [],
                     buy_num: 1,
                     info: [],
+                    count:0,
+                    len:0,
                     cartcart:[],
                     pro:{
                     },
                     names:"",
-                    count:0,
-                    len:0,
                 },
                 mounted: function () {
 
@@ -3371,48 +3368,57 @@
                         }
                     },
                     to:function () {
-                        window.location.href='JD_cart.html?i='+vl.buy_num+'&skuid='+vl.lists.id;
+                        window.location.href='JD_cart.html';
                     },
                     //搜索功能
                     research : function () {
                         var target = $("#key").val();
                         window.location.href='JD_userlist.html?i='+target+'&uid='+uid;
                     },
-                    addPro:(function () {
-                            $.ajax({
-                                type:"get",
-                                url:"http://www.xiaozai.tech:2048/emall/cart/"+uid,
-                                beforeSend:function (request) {
-                                    request.setRequestHeader("Authorization",token);
-                                },
-                                success:function (result) {
-                                    console.log(result.data.id);
-                                    result.data.items.forEach(function (item) {
-                                        if(item.skuId === vl.lists.id){
-                                            vl.count += item.skuCount;
-                                        }
-                                    });
-                                    vl.count += vl.buy_num;
-                                    var insertPro = {"cartId":result.data.id,
-                                                     "count":vl.count,
-                                                     "skuId":vl.lists.id,
-                                                    };
-                                    $.ajax({
-                                        type:"patch",
-                                        url:"http://www.xiaozai.tech:2048/emall/cart",
-                                        data:JSON.stringify(insertPro),
-                                        contentType:"application/json",
-                                        beforeSend:function (request) {
-                                            request.setRequestHeader("Authorization",token);
-                                        },
-                                        success:function (result) {
-                                            console.log(result);
-                                        }
-                                    });
-                                }
-                            });
-                        window.location.href='JD_cart.html'+'?i='+vl.buy_num+'&skuid='+vl.lists.id;
-                    }),
+                    addPro:function () {
+                        $.ajax({
+                            url: "http://www.xiaozai.tech:2048/emall/cart/9",
+                            type: "get",
+                            dataType: "json",
+                            beforeSend: function (request) {
+                                request.setRequestHeader("Authorization", token)
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                let insertPro = {"cartId":data.data.id,
+                                    "count":vl.buy_num,
+                                    "skuId":vl.lists.skus[0].id,
+                                };
+                                $.ajax({
+                                    type:"patch",
+                                    url:"http://www.xiaozai.tech:2048/emall/cart",
+                                    data:JSON.stringify(insertPro),
+                                    contentType:"application/json",
+                                    beforeSend:function (request) {
+                                        request.setRequestHeader("Authorization",token);
+                                    },
+                                    success:function (result) {
+                                        console.log(result);
+                                    }
+                                });
+                            }
+                        });
+                    },
+                }
+            });
+
+            $.ajax({
+                url: "http://www.xiaozai.tech:2048/emall/skudetails/" + ret,
+                type: "get",
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", token)
+                },
+                success: function (data) {
+                    // console.log(data.data.skus[0]);
+                    // vl.lists = data.data.skus[0];
+                    vl.lists = data.data;
+                    // console.log(vl.lists.id);
                 }
             });
 
@@ -3428,6 +3434,18 @@
                     vl.info = dt.data;
                 }
             });
+                //
+                // $.ajax({
+                //     type:"get",
+                //     url:"http://www.xiaozai.tech:1024/emall/products/sku/"+this.lists[0].id,
+                //     beforeSend:function (request) {
+                //         request.setRequestHeader("Authorization",token);
+                //     },
+                //     success:function (result) {
+                //         vl.pro = result.data;
+                //     }
+                // });
+
 
             $.ajax({
                 url: "http://www.xiaozai.tech:2048/emall/cart/"+uid,
@@ -3441,7 +3459,6 @@
                     vl.len = data.data.items.length;
                 }
             });
-            // $('#s').html(oneValues());
         });
     </script>
 </head>
@@ -3956,8 +3973,6 @@
     </div>
     <!--最顶上的一条结束-->
 
-    <!--    <span id=>接收的值为：</span>-->
-    <!--    <span id="s"></span>-->
     <!--搜索框部分 开始-->
     <div class="w">
         <div id="logo">
@@ -3973,7 +3988,7 @@
         <div id="settleup" class="dorpdown">
             <div class="cw-icon">
                 <i class="ci-left"></i>
-                <i class="ci-right">&gt;</i><i class="ci-count" id="shopping-amount">{{len}}</i>
+                <i class="ci-right">&gt;</i><i class="ci-count" id="shopping-amount" v-if="len">{{len}}</i>
                 <a target="_blank" href="JD_cart.html">我的购物车</a>
             </div>
             <div class="dorpdown-layer">
@@ -6874,12 +6889,12 @@
     <!--灰色导航结束-->
 
     <!--商品详情简略部分开始-->
-    <div class="w">
+    <div class="w" v-if="lists.skus">
         <div class="product-intro clearfix">
             <div class="preview-wrap">
                 <div class="preview" id="preview">
                     <img style="width: 452px;height: 452px;" id="spec-n1"
-                         v-bind:src="'http://123.57.7.108:81/'+lists.images[0].largeImage"
+                         v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].largeImage"
                          clstag="shangpin|keycount|product|mainpic_1">
                     <div class="spec-list" clstag="shangpin|keycount|product|lunbotu_1" id="spec_animate">
                         <a id="spec-forward" href="javascript:;" class="arrow-prev disabled">
@@ -6894,56 +6909,56 @@
                                  class="spec-items">
                                 <ul style="position: absolute; width: 988px; height: 58px; top: 0px; left: 0px;"
                                     class="lh">
-                                    <li class="tel" id="1"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[1].image"
+                                    <li class="tel" id="1"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[1].image"
                                                                 data-url="jfs/t1918/169/2366995781/85503/38fffc90/57057f7eN936fd6c0.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="2"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[3].image"
+                                    <li class="tel" id="2"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[3].image"
                                                                 data-url="jfs/t2398/236/2423112273/55901/4042f0b2/57057f81Nf9206e91.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="3"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[2].image"
+                                    <li class="tel" id="3"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[2].image"
                                                                 data-url="jfs/t2650/349/143833031/56387/db8b67f9/57057f7fN2a5935fa.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="4"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[4].image"
+                                    <li class="tel" id="4"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[4].image"
                                                                 data-url="jfs/t2629/20/163087872/51089/549b5f48/57057f80N8ee98549.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="5"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[0].image"
+                                    <li class="tel" id="5"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].image"
                                                                 data-url="jfs/t2638/8/164087731/52658/dd5b14a4/57057f80Ncb843d82.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="6"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[1].largeImage"
+                                    <li class="tel" id="6"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[1].largeImage"
                                                                 data-url="jfs/t2629/22/165276658/59043/2d8d9092/57057f83N23a7bb30.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="7"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[2].largeImage"
+                                    <li class="tel" id="7"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[2].largeImage"
                                                                 data-url="jfs/t2443/173/2420956335/61128/bb6cc847/57057f84N96832f3e.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="8"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[3].largeImage"
+                                    <li class="tel" id="8"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[3].largeImage"
                                                                 data-url="jfs/t2008/118/2398496914/22118/d9d7effe/57057f82N189469fc.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="9"><img v-bind:alt="lists.name"
-                                                                v-bind:src="'http://123.57.7.108:81/'+lists.images[4].largeImage"
+                                    <li class="tel" id="9"><img v-bind:alt="lists.skus[0].name"
+                                                                v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[4].largeImage"
                                                                 data-url="jfs/t2479/251/2420755838/19980/475d2766/57057f85N85a03144.jpg"
                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="10"><img v-bind:alt="lists.name"
-                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.images[0].largeImage"
+                                    <li class="tel" id="10"><img v-bind:alt="lists.skus[0].name"
+                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].largeImage"
                                                                  data-url="jfs/t2845/34/157476784/58830/be8c1d86/57057f83Nca8140cb.jpg"
                                                                  data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="11"><img v-bind:alt="lists.name"
-                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.images[0].largeImage"
+                                    <li class="tel" id="11"><img v-bind:alt="lists.skus[0].name"
+                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].largeImage"
                                                                  data-url="jfs/t2878/9/165583397/67136/a287eb8d/57057f84N1b18eb75.jpg"
                                                                  data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="12"><img v-bind:alt="lists.name"
-                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.images[0].largeImage"
+                                    <li class="tel" id="12"><img v-bind:alt="lists.skus[0].name"
+                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].largeImage"
                                                                  data-url="jfs/t2857/93/159401608/68756/fac55fec/57057f86N2a14907b.jpg"
-                                                                 data-img="1" height="54" width="54"></li>
-                                    <li class="tel" id="13"><img v-bind:alt="lists.name"
-                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.images[0].largeImage"
+                                                                 data-img="1" height="54" width="54">   </li>
+                                    <li class="tel" id="13"><img v-bind:alt="lists.skus[0].name"
+                                                                 v-bind:src="'http://123.57.7.108:81/'+lists.skus[0].images[0].largeImage"
                                                                  data-url="jfs/t2884/123/150460013/76699/3845e363/57057f85N8c84cb33.jpg"
                                                                  data-img="1" height="54" width="54"></li>
                                 </ul>
